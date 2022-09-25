@@ -1,5 +1,6 @@
 from datetime import date, datetime
 import math
+from nturl2path import url2pathname
 from wechatpy import WeChatClient
 from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
@@ -40,6 +41,17 @@ def get_words():
     return get_words()
   return words.json()['data']['text']
 
+def temp_judge():
+    url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
+    res = requests.get(url).json()
+    str = ""
+    temp_now = res['data']['list'][0]['temp']
+    if temp_now <= 18:
+        str = "小笨蛋，现在天气温度有点冷哦，记得多穿点衣服。（づ￣3￣）づ╭❤～"
+    else:
+        str = "现在天气有点热哦，可是适当减少衣物啦~(*^▽^*)"
+    return str
+
 def get_random_color():
   return "#%06x" % random.randint(0, 0xFFFFFF)
 
@@ -48,6 +60,7 @@ client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
 wea, temperature, low, high, city = get_weather()
-data = {"weather":{"value":wea},"city": {"value": city},"low": {"value": low},"high": {"value": high},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+clothes = temp_judge()
+data = {"weather":{"value":wea},"city": {"value": city},"low": {"value": low},"high": {"value": high},"temperature":{"value":temperature},"clothes": {"value": clothes, "color": get_random_color()},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
 res = wm.send_template(user_id, template_id, data)
 print(res)
