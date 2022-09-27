@@ -26,11 +26,11 @@ def get_weather():
   return weather['weather'], math.floor(weather['temp']), math.floor(weather['low']), math.floor(weather['high']), weather['city']
 
 def get_count():
-  delta = today - datetime.strptime(start_date, "%Y-%m-%d")
+  delta = today - datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
   return delta.days
 
 def get_birthday():
-  next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
+  next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d %H:%M:%S")
   if next < datetime.now():
     next = next.replace(year=next.year + 1)
   return (next - today).days
