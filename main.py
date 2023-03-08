@@ -46,7 +46,7 @@ def temp_judge():
     url = "https://v0.yiketianqi.com/api?unescape=1&version=v91&appid=43656176&appsecret=I42og6Lm&ext=&cityid=&city=" + city
     res = requests.get(url).json()
     str = ""
-    temp_now = res['data'][0]['tem']
+    temp_now = int(res['data'][0]['tem'])
     if temp_now <= 18:
         str = "小笨蛋，现在天气温度有点冷哦，记得多穿点衣服。（づ￣3￣）づ╭❤～"
     else:
