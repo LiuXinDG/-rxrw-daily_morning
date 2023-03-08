@@ -20,10 +20,10 @@ template_id = os.environ["TEMPLATE_ID"]
 
 
 def get_weather():
-  url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
+  url = "https://v0.yiketianqi.com/api?unescape=1&version=v91&appid=43656176&appsecret=I42og6Lm&ext=&cityid=&city=" + city
   res = requests.get(url).json()
-  weather = res['data']['list'][0]
-  return weather['weather'], math.floor(weather['temp']), math.floor(weather['low']), math.floor(weather['high']), weather['city']
+  weather = res['data'][0]
+  return weather['weather'], math.floor(weather['tem']), math.floor(weather['tem2']), math.floor(weather['tem1']), city
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
@@ -42,10 +42,10 @@ def get_words():
   return words.json()['data']['text']
 
 def temp_judge():
-    url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
+    url = "https://v0.yiketianqi.com/api?unescape=1&version=v91&appid=43656176&appsecret=I42og6Lm&ext=&cityid=&city=" + city
     res = requests.get(url).json()
     str = ""
-    temp_now = res['data']['list'][0]['temp']
+    temp_now = res['data'][0]['tem']
     if temp_now <= 18:
         str = "小笨蛋，现在天气温度有点冷哦，记得多穿点衣服。（づ￣3￣）づ╭❤～"
     else:
