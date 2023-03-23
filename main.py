@@ -22,14 +22,14 @@ template_id = os.environ["TEMPLATE_ID"]
 def get_weather_now():
   url = "https://restapi.amap.com/v3/weather/weatherInfo?key=fd6beb7eed087534ab7e54872ff47d06&city=640105&extensions=base"
   res = requests.get(url).json()
-  weather = int(res['lives'][0])
-  city_n = res['lives']['city']
+  weather = res['lives'][0]
+  city_n = res['lives'][0]['city']
   return weather['weather'], weather['temperature'],city_n
 
 def get_weather_all():
   url = "https://restapi.amap.com/v3/weather/weatherInfo?key=fd6beb7eed087534ab7e54872ff47d06&city=640105&extensions=all"
   res = requests.get(url).json()
-  weather = int(res['forecasts'][0]['casts'][0])
+  weather = res['forecasts'][0]['casts'][0]
   return weather['daytemp'],weather['nighttemp']
 
 def get_count():
@@ -52,7 +52,7 @@ def temp_judge():
     url = "https://restapi.amap.com/v3/weather/weatherInfo?key=fd6beb7eed087534ab7e54872ff47d06&city=640105&extensions=base"
     res = requests.get(url).json()
     str = ""
-    temp_now = res['lives'][0]['temperature']
+    temp_now = int(res['lives'][0]['temperature'])
     if temp_now <= 18:
         str = "小笨蛋，现在天气温度有点冷哦，记得多穿点衣服。（づ￣3￣）づ╭❤～"
     else:
