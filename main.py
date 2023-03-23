@@ -19,12 +19,18 @@ user_id = os.environ["USER_ID"]
 template_id = os.environ["TEMPLATE_ID"]
 
 
-def get_weather():
-  url = "https://v0.yiketianqi.com/api?unescape=1&version=v91&appid=43656176&appsecret=I42og6Lm&ext=&cityid=&city=" + city
+def get_weather_now():
+  url = "https://restapi.amap.com/v3/weather/weatherInfo?key=fd6beb7eed087534ab7e54872ff47d06&city=640105&extensions=base"
   res = requests.get(url).json()
-  weather = res['data'][0]
-  city_n = res['city']
-  return weather['wea'], weather['tem'], weather['tem2'], weather['tem1'], city_n
+  weather = int(res['lives'][0])
+  city_n = res['lives']['city']
+  return weather['weather'], weather['temperature'],city_n
+
+def get_weather_all():
+  url = "https://restapi.amap.com/v3/weather/weatherInfo?key=fd6beb7eed087534ab7e54872ff47d06&city=640105&extensions=all"
+  res = requests.get(url).json()
+  weather = int(res['forecasts'][0]['casts'][0])
+  return weather['daytemp'],weather['nighttemp']
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
@@ -43,10 +49,10 @@ def get_words():
   return words.json()['data']['text']
 
 def temp_judge():
-    url = "https://v0.yiketianqi.com/api?unescape=1&version=v91&appid=43656176&appsecret=I42og6Lm&ext=&cityid=&city=" + city
+    url = "https://restapi.amap.com/v3/weather/weatherInfo?key=fd6beb7eed087534ab7e54872ff47d06&city=640105&extensions=base"
     res = requests.get(url).json()
     str = ""
-    temp_now = int(res['data'][0]['tem'])
+    temp_now = res['lives'][0]['temperature']
     if temp_now <= 18:
         str = "小笨蛋，现在天气温度有点冷哦，记得多穿点衣服。（づ￣3￣）づ╭❤～"
     else:
@@ -60,7 +66,8 @@ def get_random_color():
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
-wea, temperature, low, high, city = get_weather()
+wea, temperature, city = get_weather_now()
+low, high, = get_weather_all()
 clothes = temp_judge()
 data = {"weather":{"value":wea},"city": {"value": city},"low": {"value": low},"high": {"value": high},"temperature":{"value":temperature},"clothes": {"value": clothes, "color": get_random_color()},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
 res = wm.send_template(user_id, template_id, data)
