@@ -30,7 +30,7 @@ def get_weather_all():
   url = "https://restapi.amap.com/v3/weather/weatherInfo?key=fd6beb7eed087534ab7e54872ff47d06&city=640105&extensions=all"
   res = requests.get(url).json()
   weather = res['forecasts'][0]['casts'][0]
-  return weather['daytemp'],weather['nighttemp']
+  return weather['nighttemp'],weather['daytemp']
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
